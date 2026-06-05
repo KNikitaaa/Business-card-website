@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1b4f9e;
+  --color-primary-dark: #153d7f;
+  --color-dark: #0f172a;
+  --color-light: #ffffff;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+  color: #1e293b;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #1b4f9e;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #1b4f9e;
+  color: #ffffff;
+}
+
+/* Link styling */
+a {
+  color: #1b4f9e;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #153d7f;
+}
+
+/* Button reset */
+button {
+  font-family: inherit;
+}
+
+/* Image styling */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Grid pattern background utility */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}

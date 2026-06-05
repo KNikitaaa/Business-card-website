@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "defaultMode": "auto",
+    "allow": [
+      "mcp__serena__*",
+      "mcp__context7__*",
+      "mcp__sequential-thinking__*",
+      "mcp__memory__*",
+      "mcp__filesystem__*",
+      "mcp__puppeteer__*",
+      "Bash(claude mcp*)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(node *)"
+    ]
+  }
+}

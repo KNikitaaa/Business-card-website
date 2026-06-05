@@ -1,0 +1,85 @@
+version: '3.9'
+
+services:
+  # Frontend - Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: site-visitka-frontend
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - site-network
+    restart: unless-stopped
+
+  # Backend - FastAPI
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: site-visitka-backend
+    ports:
+      - '8000:8000'
+    environment:
+      ENVIRONMENT: development
+      REDIS_URL: redis://redis:6379
+      MAIL_SERVER: mailpit
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ''
+      MAIL_PASSWORD: ''
+      MAIL_FROM: noreply@proektgroup.ru
+      MAIL_STARTTLS: 'false'
+      MAIL_SSL_TLS: 'false'
+      ADMIN_EMAIL: admin@proektgroup.ru
+      ALLOWED_ORIGINS: '["http://localhost:3000", "http://localhost:8000"]'
+      SITE_NAME: Проектная группа
+    depends_on:
+      - redis
+    networks:
+      - site-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Redis - for rate limiting and sessions
+  redis:
+    image: redis:7-alpine
+    container_name: site-visitka-redis
+    ports:
+      - '6379:6379'
+    networks:
+      - site-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Mailpit - local SMTP testing
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: site-visitka-mailpit
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - site-network
+    restart: unless-stopped
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+
+networks:
+  site-network:
+    driver: bridge

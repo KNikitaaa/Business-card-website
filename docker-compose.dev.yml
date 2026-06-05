@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: site-visitka-frontend-dev
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      BACKEND_URL: http://backend:8000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      - backend
+    networks:
+      - site-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: site-visitka-backend-dev
+    ports:
+      - '8000:8000'
+    environment:
+      ENVIRONMENT: development
+      REDIS_URL: redis://redis:6379
+      MAIL_SERVER: mailpit
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ''
+      MAIL_PASSWORD: ''
+      MAIL_FROM: noreply@proektgroup.ru
+      MAIL_STARTTLS: 'false'
+      MAIL_SSL_TLS: 'false'
+      ADMIN_EMAIL: admin@proektgroup.ru
+      ALLOWED_ORIGINS: '["http://localhost:3000", "http://localhost:8000"]'
+      SITE_NAME: Проектная группа
+    volumes:
+      - ./backend/app:/app/app
+    depends_on:
+      - redis
+    networks:
+      - site-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: site-visitka-redis-dev
+    ports:
+      - '6379:6379'
+    networks:
+      - site-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: site-visitka-mailpit-dev
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - site-network
+    environment:
+      MP_MAX_MESSAGES: 5000
+
+networks:
+  site-network:
+    driver: bridge
